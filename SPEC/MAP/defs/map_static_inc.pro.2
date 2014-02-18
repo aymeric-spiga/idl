@@ -1,0 +1,69 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+filename = '/d5/aslmd/WRF_Mars/EN_COURS/OMG_cstTI/geo_em.d03.nc'
+save_ps  = 'meridiani_ti'
+field1  = 'THERMAL_INERTIA'  ;; omettre trace vitesse horizontale
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+format        = '(I0)'
+colors        = 32
+pal           =  4 ;33 ;4 ;22 ;33 ;39 ;6 ;11 ;0 ;11 ;6 ;0 ;6 ;39 ;19 
+title_user    = 'Apparent nighttime thermal inertia (J m!U-2!N s!U-0.5!N K!U-1!N)'
+        title_axis      =       ['East longitude','North latitude']
+poscb=0.96
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; FILL LIMITS				       ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;minfield_init= 10.      
+;maxfield_init= 110.    
+minfield_init= 30. ;50.      
+maxfield_init= 230. ;250.    
+minfield_init= 50.      
+maxfield_init= 250.    
+	;minfield_init=1.4
+	;maxfield_init=2.4
+	;what_I_plot = alog(what_I_plot)/alog(10)
+missing_value=1.e30
+lim_max = maxfield_init & w=where((what_I_plot ge lim_max) and (what_I_plot le 1e9)) & if (w[0] ne -1) then what_I_plot[w]=lim_max 
+lim_min = minfield_init & w=where(what_I_plot le lim_min) & if (w[0] ne -1) then what_I_plot[w]=lim_min 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; WINDS				       ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+windex=20.  	;; default: 20.
+stride=3.       ;; default: 5.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; CONTOUR				       ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+overcontour=overcontour/1000.
+lev=-10. + 0.2*findgen(100) 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; AXIS				       ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+intervalx=0.5            
+intervaly=0.5            
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; MAP LIMITS 				       ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+windowx=[14.0,16.0]        
+windowy=[10.0,12.0]
+
+
+filename = '/donnees/aslmd/MODELES/LMD_MM_MARS/g95_32_single/WPS/geo_em.d01.nc'
+filename = './geo_em.d01.nc'
+;filename = '/donnees/aslmd/MODELES/LMD_MM_MARS/mpi_64/WPS/geo_em.d01.nc'
+filename = '/d5/aslmd/LMD_MM_MARS_SIMUS/OM/OM6_TI85/geo_em.d01.nc'
+save_ps  = 'OM6_TI85_ti'
+lev = -10. + 2.*findgen(20)
+intervalx = 2.
+intervaly = 1.
+windowx = [-146.,-126.]
+windowy = [10.,28.]
+windowx = [-146.,-128.]
+windowy = [12.,26.]
+windowx         =       [-146.,-126.]        
+windowy         =       [11.,27.]
+
+
+title='Slope angle (deg)'
+format='(I0)'
+pal=16
+

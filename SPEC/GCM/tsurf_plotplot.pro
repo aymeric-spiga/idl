@@ -1,0 +1,73 @@
+pro tsurf_plotplot
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+file='./diagfi.nc'
+set_name='tsurf'
+it=17
+iz=1
+;iz=0
+iz=3
+;it=4
+it=18 ;; GCM
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+SPAWN, 'cp -f tsurf_param_plot.idl param_plot.idl'
+
+	;
+	; graphics definition
+	;
+	if (n_elements(saveps) eq 0) then saveps='true'
+	if (saveps eq 'false') then begin 
+	   ;!p.multi=[0,3,2] 
+	   !P.CHARSIZE=2.
+	   WINDOW, /PIXMAP & WDELETE & DEVICE,BYPASS_TRANSLATION=0,DECOMPOSED=0,RETAIN=2
+	endif ;else begin
+	   ;PREF_SET, 'IDL_PATH', '/padata/beta/users/aspiga/Save/SOURCES/IDL/fsc_psconfig:<IDL_DEFAULT>', /COMMIT
+	;endelse
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+getcdf, file=file, charvar='tsurf', invar=tsurf
+getcdf, file=file, charvar='ps', invar=ps
+ox = getget_gcm(file, 'u', count=[0,0,1,1], offset=[0,0,iz,it])
+oy = getget_gcm(file, 'v', count=[0,0,1,1], offset=[0,0,iz,it])
+;getcdf, file=file, charvar='u'    , invar=u
+;getcdf, file=file, charvar='v'    , invar=v
+;getcdf, file=file, charvar='lon'  , invar=lon
+;getcdf, file=file, charvar='lat'  , invar=lat
+getcdf, file=file, charvar='longitude'  , invar=lon
+getcdf, file=file, charvar='latitude'  , invar=lat
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;what_I_plot = reform(tsurf(*,*,it))
+oc = reform(ps(*,*,it))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+what_I_plot = sqrt(ox^2 + oy^2)
+;what_I_plot = sqrt(oy^2)
+print, min(what_I_plot)
+print, mean(what_I_plot)
+print, max(what_I_plot)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	if (saveps eq 'true') then PS_Start, FILENAME=set_name+'.ps'
+	!P.Charsize = 1.2
+map_latlon, what_I_plot, lon, lat, overcontour=oc, overvector_x=ox, overvector_y=oy
+	if (saveps eq 'true') then PS_End, /PNG
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;cmd='cp plotplot.pro '+set_name+'_plotplot.pro ; cp param_plot.idl '+set_name+'_param_plot.idl'
+;SPAWN, cmd
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+end

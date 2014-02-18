@@ -1,0 +1,80 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ntime    = 8  ;; le vrai indice IDL 
+nlevel   = 0 
+filename = '/donnees/aslmd/MODELES/LMD_MM_MARS/OUTILS_CONVERSION/wrfout_d04_2024-06-20_06:00:00_zabg' 
+filename = '/donnees/aslmd/MODELES/LMD_MM_MARS/OUTILS_CONVERSION/wrfout_d01_2024-06-20_06:00:00_zabg'
+save_ps  = 'uvsingle_utc14'
+;filename = '/donnees/aslmd/MODELES/LMD_MM_MARS/OUTILS_CONVERSION/wrfout_d03_2024-06-20_06:00:00_zabg'
+;coord2d  = 'true' & save_ps  = 'uvnest3_utc14'
+;field1  = 'WAVE'  ;; omettre trace vitesse horizontale
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+format        = '(F4.1)'
+colors        = 128
+pal           =  22 ;33 ;39 ;6 ;11 ;0 ;11 ;6 ;0 ;6 ;39 ;19 
+title_user    = ''
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; FILL LIMITS				       ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+minfield_init= +00.      
+maxfield_init= +20.    
+missing_value=1.e30
+lim_max = maxfield_init & w=where((what_I_plot ge lim_max) and (what_I_plot le 1e9)) & if (w[0] ne -1) then what_I_plot[w]=lim_max 
+lim_min = minfield_init & w=where(what_I_plot le lim_min) & if (w[0] ne -1) then what_I_plot[w]=lim_min 
+;lim_blank = 0.2 & w=where(abs(what_I_plot) le lim_blank) & if (w[0] ne -1) then what_I_plot[w]=missing_value 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; WINDS				       ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+windex=20.  	;; default: 20.
+stride=3.       ;; default: 5.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; CONTOUR				       ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;overcontour=overcontour-mean(overcontour)      
+overcontour=overcontour/1000.
+lev=-10. + 0.2*findgen(100) 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; AXIS				       ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;isotropic='false'       ;; default: true
+intervalx=0.5            
+intervaly=0.5            
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; MAP LIMITS 				       ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+windowx=[-36.0,-32.0]        
+windowy=[-28.0,-24.5]
+
+intervalx=1.0
+intervaly=1.0
+windowx=[-41.0,-31.0]
+windowy=[-32.0,-22.0]
+stride=2.
+minfield_init= +00.
+maxfield_init= +15.
+windex=15.
+
+
+
+;filename = '/donnees/aslmd/MODELES/LMD_MM_MARS/OUTILS_CONVERSION/wrfout_d01_2024-06-20_06:00:00_z'
+;save_ps  = 'uvsingle_utc14_10km'
+;;filename = '/donnees/aslmd/MODELES/LMD_MM_MARS/OUTILS_CONVERSION/wrfout_d03_2024-06-20_06:00:00_z'
+;;coord2d  = 'true' & save_ps  = 'uvsingle_utc14_10km'
+;intervalx=1.0
+;intervaly=1.0
+;windowx=[-50.0,-30.0]
+;windowy=[-40.0,-20.0]
+;stride=5.
+;minfield_init= +00.
+;maxfield_init= +40.
+;windex=30.
+
+filename='/donnees/aslmd/MODELES/LMD_MM_MARS/OUTILS_CONVERSION/wrfout_d01_2024-07-03_06:00:00_z'     
+save_ps  = 'windgw'
+intervalx=1.0 & intervaly=1.0
+windowx=[ 0., 180.] & windowy=[-90.,-40.]
+stride=5. & windex=60.
+minfield_init= +00. & maxfield_init= +40.
+lev=-10. + 0.1*findgen(200)
+
+

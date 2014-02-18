@@ -1,0 +1,56 @@
+; cf gw.def apres 'change plot settings'
+;
+
+;title_user='Evolution of mean wind speed (m/s) with height ABG and LT'
+        ;;'Evolution of mean temperature (K) with height ABG and LT'
+        ;;'Evolution of mean wind speed (m/s) with height ABG and LT'
+
+
+title_user='Evolution of horizontal wind speed (m/s) with height AGL and LT'
+;  title_user='Evolution of vertical wind speed (m/s) with height ABG and LT'
+;title_user='Evolution of temperature (K) with height AGL and LT'
+
+;subtitle_user='Tau dust 5 minus Tau dust 2'
+
+windowx=[6.,29.]
+windowx=[0.,23.]
+windowy=[0.,45.]
+intervalx=1.
+intervaly=5.
+
+pal=33
+numdiv=14
+
+pal=22
+format='(I0)'
+
+minfield_init=0.
+maxfield_init=80.
+numdiv=10
+
+	;windowx=[0.,23.]
+	;windowy=[0.,12.]
+	;intervalx=1.
+	;intervaly=2.
+	;minfield_init=0.
+	;maxfield_init=30.
+
+;minfield_init=120.
+;maxfield_init=220.
+
+
+  ;numdiv=10
+  ;minfield_init=-2.
+  ;maxfield_init=2.
+  ;minfield_init=-0.5
+  ;maxfield_init=0.5
+  ;pal=33
+
+
+isotropic='false'
+
+lim_max = maxfield_init & w=where((what_I_plot ge lim_max) and (what_I_plot le 1e9)) & if (w[0] ne -1) then what_I_plot[w]=lim_max
+lim_min = minfield_init & w=where(what_I_plot le lim_min) & if (w[0] ne -1) then what_I_plot[w]=lim_min
+
+;;pour tracer les vents en fonction du temps mettre :
+title_axis=['Martian hour (h)','Height above ground (km)']

@@ -1,0 +1,5 @@
+#! /bin/bash
+
+\rm getturb.dat 2> /dev/null
+echo "getturb & exit" | /opt/idl-6.4/idl/bin/idl > logidl 2> logidl_err &
+

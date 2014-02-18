@@ -1,0 +1,152 @@
+pro gravitwaveprof
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+path='/donnees/aslmd/MODELES/LMD_MM_MARS/TESTGW/'
+experiment='mcd_lt16_rcpcst'
+;experiment='mcd_lt16'
+;experiment='short_mcd_lt16_rcpcst'
+;experiment='short_mcd_lt16'
+;experiment='short_mcd_lt16_calcprho'
+;experiment='mcd_lt16_calcprho'
+;experiment='short_mcd_lt16_calcprho_tot'
+;experiment='colder_gcm_add_short'
+;experiment='colder_gcm_add'
+experiment=''
+;experiment='colder_gcm_add_3.9_fine_rad_mountain'
+file=path+experiment+'_wrfout_d01_9999-09-09_09:00:00_z'
+charvar='W' & charvarc='W'
+charvar='tk' & charvarc='W'
+charvar='tk' & charvarc='W' & cond=1
+charvar='tpot' & charvarc='tpot'
+;charvar='PTOT' & charvarc='PTOT'
+charvar='tk' & charvarc='tk'
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;
+;
+;
+what_I_plot=0. & overcontour=0.
+;SPAWN, '\rm param_plot.idl ; cp gravitwave_inc2.pro param_plot.idl'
+;
+;
+;
+getcdf, $
+        file=file, $
+        charvar=charvar, $
+        invar=invar
+getcdf, $
+        file=file, $
+        charvar=charvarc, $
+        invar=invarc
+getcdf, $
+        file=file, $
+        charvar='vert', $
+        invar=vert
+getcdf, $
+        file=file, $
+        charvar='PTOT', $
+        invar=columnp
+;
+;
+;
+for nt=1,10 do begin
+;for nt=3,3 do begin
+;for nt=1,1 do begin
+;for nx=0,59 do begin
+;for nx=1,1 do begin
+;for nx=999,999 do begin  ;; moyenne ;; attention a la montagne !!!
+for nx=30,30 do begin
+zefile=experiment+'_'+charvar+'_'+string(nt+100,'(I0)')+'_'+string(nx+100,'(I0)')
+;
+;
+;
+  PS_Start, filename=zefile+'.ps'
+  print, zefile+'.ps'
+  !P.Charsize = 1.2
+  !p.charthick = 2.0
+  !p.thick = 2.0
+  !x.thick = 2.0
+  !y.thick = 2.0
+;
+;
+;
+what_I_plot = reform(invar(*,1,*,nt))
+
+   ;logp = -10.*alog(reform(columnp(nx,1,*,nt))/610.)
+   ;vert = logp
+
+   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+   file=path+experiment+'/input_sounding' & header='' & nlines_header=1 & ncol = 5
+   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+   nlines = FILE_LINES(file)-nlines_header & data=FLTARR(ncol,nlines)
+   OPENR, lun, file, /GET_LUN & READF, lun, header & READF, lun, data & CLOSE, lun & FREE_LUN, lun
+   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+   mcd_column      = reform(data(0,*)) 
+   calc_tpot       = reform(data(1,*))
+
+   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+   file=path+experiment+'/input_therm' & ncol = 5
+   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+   nlines = FILE_LINES(file) & data=FLTARR(ncol,nlines)
+   OPENR, lun, file, /GET_LUN & READF, lun, data & CLOSE, lun & FREE_LUN, lun
+   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+   pressure        = reform(data(2,*))
+   mcd_tpot        = reform(data(4,*))   
+
+
+   ;nx = 1;30;59;10
+   if (nx lt 999) then begin
+     overplot = reform(what_I_plot(nx,*))
+   endif else begin
+     overplot = TOTAL(what_I_plot,1) / n_elements(reform(what_I_plot(*,0)))
+   endelse 
+   overplot_column = vert/1000.
+   column = mcd_column/1000.
+   mention = ''
+   alt = [0.,150.]
+   SPAWN, '\rm param_plot.idl'
+
+;what_I_plot = pressure
+;	what_I_plot = calc_tpot
+;overplot = alog(overplot) / alog(10.)
+;overplot = overplot[where(overplot lt 35.)] ;; evite les valeurs impossibles
+;what_I_plot = alog(what_I_plot) / alog(10.)
+;minfield_init = -5.
+;maxfield_init = 3.
+;	;;tpot
+;	minfield_init = 2.
+;	maxfield_init = 4.
+
+what_I_plot = mcd_tpot
+minfield_init = 100.
+maxfield_init = 250.
+
+;what_I_plot = 100. * abs(calc_tpot - overplot) / overplot
+;minfield_init = 0.000001
+;maxfield_init = 100.
+
+   profile, $
+        what_I_plot, $                          ; 1D vertical profile
+        column, $                               ; altitudes     
+        alt=alt, $                              ; altitude range [altmin, altmax]
+        minfield=minfield_init, $               ; minimum value of plotted field (=0: calculate)
+        maxfield=maxfield_init, $               ; maximum value of plotted field (=0: calculate)
+        inprofile=overplot, $                   ; another vertical profile to overplot
+        incolumn=overplot_column, $             ; altitudes of the other vertical profile (in case /= column)
+;        discrete=discrete, $                    ; show the profile points (= type of points in !psym)
+;        title_plot=title_user, $                ; title of the plot ('Profile' is default)
+;        title_axis=title_axis, $                ; title of the [x,y] axis (['Field','Altitude'] is default)
+        mention=mention                         ; add text precision within the plot window (default is nothing or '')
+
+;; sponge layer
+w=where(FINITE(overplot) ne 0)
+oplot, [minfield_init,maxfield_init], [max(overplot_column[w])-50.,max(overplot_column[w])-50.], linestyle=1
+
+;calc_tk = calc_tpot * (pressure/610.)^(1/4.4)
+;oplot, calc_tk, column, linestyle=3
+
+PS_End, /PNG
+endfor
+endfor
+end

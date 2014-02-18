@@ -1,0 +1,25 @@
+
+;
+; field1='U'
+; winds=['V','W']
+;
+
+if ( (field1 eq 'U') $
+	and (winds(0) eq 'V') $
+        and (winds(1) eq 'W')  ) then begin
+
+print, 'computing wind velocity'
+
+title='3D wind velocity (!NN!N.m!U-2!N)'
+
+u=what_I_plot
+v=overvector_x
+w=overvector_y
+
+velocity2=u^2+v^2+w^2
+what_I_plot=sqrt(velocity2)
+
+;;overvector_x=0
+;;overvector_y=0
+
+endif

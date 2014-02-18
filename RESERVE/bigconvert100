@@ -1,0 +1,9 @@
+#!/bin/csh
+# f. forget
+foreach i ( $* )
+    echo $1
+    set name = `echo $1 | sed -e 's/\./ /' `
+    echo $name[1].png
+   convert -antialias -density 100x100 -crop 0x0 $1 $name[1].png
+   shift
+end

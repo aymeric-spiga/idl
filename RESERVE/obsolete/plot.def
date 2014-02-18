@@ -1,0 +1,159 @@
+;;---------------------------------------
+;
+;  fill here plot parameters then type:
+;
+;  @trace.idl
+;  -or- @report.idl
+;  -or- @movie.idl
+;
+;  this file will be saved !
+;
+;;---------------------------------------
+
+
+;-------------------------------
+;-------------------------------
+; namelist.ARWPOST parameters
+;-------------------------------
+;-------------------------------
+
+;; DEFAULT: ARWPOST.EXE ALREADY RUN (i.e. input.ctl and input.dat already there)
+;; UNCOMMENT FOLLOWING LINE TO EXTRACT FILES 
+
+;extract='yes'	;;   EXECUTE ARWPOST.EXE
+		;;   WITH THE FOLLOWING PARAMETERS :
+
+nam1=" fields = 'tk,HGT,PSFC,U,V,W' "		;; CHANGE HERE FIELDS TO BE EXTRACTED 
+nam1=" fields = 'tk' "
+nam1=" fields = 'HGT,U,V' "
+nam1=" fields = 'V,W' "
+nam1=" fields = 'HGT,ICETOT,RAVE,QH2O_ICE' "
+
+nam2=" start_date = '2024-04-04_06:00:00' "	;; CHANGE HERE START DATE
+nam3=" end_date   = '2024-04-04_08:00:00' "	;; CHANGE HERE END DATE
+nam4=" interval_seconds = 14800 "		;; SET INTERVAL   2h: 7400s, 4h: 14800s, 6h: 22200s	
+nam5=" interp_method = 1 "			;; SET VERT. COORD. 0: eta levels, 1: height (inc) or pressure (dec)
+tabnam=[1,30,0.5]   	;; SET HEIGHT/PRESSURE LEVELS WITH [first alt, last alt, step]
+
+
+
+;----------------------------------------------------
+;----------------------------------------------------
+; what do you want to plot ?
+; THIS MUST BE SET ACCORDINGLY TO PREVIOUS SECTION
+;   - do not plot a field not extracted
+;   - do not ask for more plot than data available
+;----------------------------------------------------
+;----------------------------------------------------
+
+num=1		   	;; how many plots ?
+num=6                   ;; how many plots ?
+;num=2                   ;; how many plots ?
+num=3
+
+;@map_sea_level.idl
+;@map_ertel_vorticity.idl
+;@map_wind_stress.idl
+;field1='HGT'
+;field2='U'
+;winds=['U','V']
+;topo=1
+
+;winds=['U','V'] & field1='U' & topo=1
+;winds=['V','W'] & field1='V' 
+field1='ICETOT' & topo=1
+;field1='QH2O_ICE'
+
+
+
+;----------------------------------
+;----------------------------------
+; what kind of plot do you want ? 
+;----------------------------------
+;----------------------------------
+
+plot='map' & level=-1	
+level=2		; first level is 1
+level=24
+;level=10
+;level=1
+
+;plot='meridional' & nlon=-1 	
+;nlon=75
+
+;plot='zonal' & nlat=-1		
+;nlat=100
+
+
+;----------------------------
+;----------------------------
+; change plot settings 
+;----------------------------
+;----------------------------
+
+;; uncomment to modify default plot settings
+;; | | | | | | | | | | | | | | | | | | | | |
+;; v v v v v v v v v v v v v v v v v v v v v
+
+minfield_init=0.		;; grepALL
+maxfield_init=16.		;; grepALL
+;intervalx=5.	           	;; grepALL
+;intervaly=5.	           	;; grepALL
+;title_user='my own plot'	;; grepALL
+;title_axis=['abs','ord']	;; grepALL
+;colors=30			;; grepALL
+;pal=33				;; grepALL
+;pal=0				;; grepALL
+;pal=22				;; grepALL
+;format='(I0)'			;; grepALL
+;windex=20.			;; grepALL
+;stride=2			;; grepALL
+;flag_cb='false'		;; grepALL
+;what_I_plot=what_I_plot*1e6    ;; grepALL
+
+;minalt=-4.			;; grepSEC
+;maxalt=1.5			;; grepSEC
+;;altitude=altitude*1000.  	;; grepSEC
+;factor=30.			   ;; grepSEC
+;space=space*58. & spacekm='true'   ;; grepSEC
+;minspace=10.4*58./factor             ;; grepSEC
+;maxspace=12.*58./factor            ;; grepSEC
+
+windowx=[-145,-100]	;; grepMAP
+windowy=[-25,25]	;; grepMAP
+;lon=lon*58.		;; grepMAP
+;lat=lat*58.		;; grepMAP
+
+;lim_max = 0.03 				;; 1/3 grepALL
+;w=where(what_I_plot ge lim_max) 		;; 2/3 grepALL
+;if (w[0] ne -1) then what_I_plot[w]=lim_max	;; 3/3 grepALL
+
+;lim_blank = 10 					;; 1/3 grepALL
+;w=where(abs(what_I_plot) le lim_blank)			;; 2/3 grepALL
+;if (w[0] ne -1) then what_I_plot[w]=missing_value	;; 3/3 grepALL
+
+;title_user='Sea-level surface pressure'+title_user	;; grepALL
+
+;what_I_plot=what_I_plot*1000.  				;; grepALL
+;title_user='Water ice column (!7l!3m-pr)'+title_user	;; grepALL
+subtitle_user='LMD mesoscale model'     		;; grepALL
+
+;what_I_plot(*,*)=missing_value		;; grepMAP
+
+
+;------------------------------
+;------------------------------
+; some last possible settings 
+;------------------------------
+;------------------------------
+
+backup_data='no'   	;; save ARWpost-generated text files ? default is no
+already_data='no'  	;; load ARWpost-generated text files ? default is no
+datafolder='./WHERE_RESULTS_ARE/'	;; default is ./
+plotfolder='./WHERE_PLOTS_ARE/'	        ;; default is ./
+
+textitle='TH20_WC'	;; one word.  default is 'plot'
+texcomments='sol4'	;; one word.  default is 'plot'
+
+
+

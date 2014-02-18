@@ -1,0 +1,20 @@
+;;#
+;;# @coeffw
+;;#
+
+ye2, r, t
+
+;;1.2
+yeyeye = where(t le 1.5) & r0 = r[yeyeye] & t0 = t[yeyeye]
+
+;;r0 = r & t0 = t
+
+rerr = replicate(1.e-10,n_elements(r0))
+start = [mean(r0), max(r0)-min(r0), (max(t0)-min(t0))*mean(r0)]
+start = [2.53,0.73,0]
+expr = 'FONC2(X, P)'
+result = MPFITEXPR(expr,t0,r0,rerr,start)
+
+plot, r, t, psym=5, yrange=[0,1.5] & oplot, fonc2(t, result), t
+;oplot, fonc2(t, [2.53,0.73,0.]), t
+

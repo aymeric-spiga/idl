@@ -1,0 +1,30 @@
+;
+; @coeffhf
+;
+
+
+ye, r, t
+
+yeyeye = where(t le 0.3) & r0 = r[yeyeye] & t0 = t[yeyeye]
+
+rerr = replicate(1.e-10,n_elements(r0))
+start = [mean(r0), max(r0)-min(r0), (max(t0)-min(t0))*mean(r0)]
+expr = 'FONC1(X, P)'
+result = MPFITEXPR(expr,t0,r0,rerr,start)
+
+;plot, r, t, psym=5, yrange=[0,0.6] & oplot, fonc1(t, result), t
+
+yeyeye = where((t gt 0.3) and (t le 1.0)) & r0 = r[yeyeye] & t0 = t[yeyeye]
+;ye = LINFIT(t0,r0) & oplot, ye(1) * t + ye(0), t
+
+       ;;
+       ;; verif
+       ;;
+       ;lim=0.30 & zelim=(-3.85/alog(lim)+0.07*alog(lim))*exp(-4.61*lim)
+       ;up=1. & & zeup= - 1.55 * up + 1.27
+       ;slope = (zelim - zeup) / (lim - up) & ord = zeup - slope * up
+       ;t1 = findgen(101.)*lim/100. & param1 = (-3.85/alog(t1)+0.07*alog(t1))*exp(-4.61*t1)
+       ;t2 = lim + findgen(101.)*(1.0 - lim)/100. & param2 = slope * t2 + ord
+       ;plot, param1, t1, yrange=[0.,1.], xrange=[-0.5,1.] & oplot, param2, t2 & oplot, r, t, psym=5
+
+

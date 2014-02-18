@@ -1,0 +1,45 @@
+
+;
+; field1='U'
+; field2='V'
+; winds=['PSFC','tk']
+;
+
+if ((winds(0) eq 'PSFC') $
+	and (winds(1) eq 'tk') $
+	and (field1 eq 'U') $
+	and (field2 eq 'V')) then begin
+
+
+print, 'computing wind stress'
+
+title='Wind stress (!NN!N.m!U-2!N)'
+
+temp=overvector_y
+press=overvector_x
+gasconst=192.
+rho=press/(gasconst*temp)
+
+vonkar=0.4
+heightlay=5.66  ;; a calculer ??
+roughness=0.01
+cd=vonkar/(alog(heightlay/roughness))
+cd=cd^2
+
+velocity2=what_I_plot^2 + overcontour^2
+
+stress=rho*cd*velocity2
+what_I_plot=stress
+
+;;overcontour=-10.*alog(overvector_x/610.)
+overcontour=overvector_x
+
+overvector_x=0
+overvector_y=0
+
+;;tmpfield=reform(u[*,*,0,*])
+;;press_bg = total(tmpfield,3)/n_elements(tmpfield(0,0,*))
+;;overcontour=press_bg
+
+
+endif

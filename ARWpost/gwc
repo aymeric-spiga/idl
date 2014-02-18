@@ -1,0 +1,47 @@
+
+;
+; every time you modify gw.def, launch @gwc
+;
+
+
+;
+; START FROM SCRATCH
+;
+.reset_session
+
+
+;
+; USER PARAMETERS
+;
+print, 'reading user parameters ...'
+SPAWN, 'touch user.idl ; \rm user.idl ; grep -v grep gw.def > user.idl'
+@user.idl
+
+
+;
+; PLOT PARAMETERS
+;
+what_to_do='\rm param_plot.idl ; grep grepALL gw.def > param_plot.idl'
+
+if ((plot eq 'meridional') or (plot eq 'zonal')) then what_to_do=what_to_do+' ; grep grepSEC gw.def >> param_plot.idl'
+if (plot eq 'map') then what_to_do=what_to_do+' ; grep grepMAP gw.def >> param_plot.idl'
+
+SPAWN, what_to_do
+
+SPAWN, 'grep nam2 gw.def >> param_plot.idl'
+
+print, 'done !'
+
+
+;;;SPAWN, '\rm param_plot.idl ; grep grepALL gw.def > param_plot.idl'
+;;;if ((plot eq 'meridional') or (plot eq 'zonal')) then SPAWN, 'grep grepSEC gw.def >> param_plot.idl'
+;;;if (plot eq 'map') then SPAWN, 'grep grepMAP gw.def >> param_plot.idl'
+
+
+
+;
+; ALWAYS RE-COMPILE
+;
+.compile gw
+.compile map_latlon
+.compile section

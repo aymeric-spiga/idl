@@ -1,0 +1,267 @@
+;;---------------------------------------
+;
+;  fill here plot parameters then type:
+;
+;  @trace.idl
+;  -or- @report.idl
+;  -or- @movie.idl
+;
+;  this file will be saved !
+;
+;;---------------------------------------
+
+
+;-------------------------------------;
+; DATA LOCATION and PLOT DESTINATION  ;
+; default is ./                       ;
+;-------------------------------------;
+datafolder='/home/aslmd/MERIDIANI_EXOMARS'
+plotfolder=datafolder
+;; for web anim and tex report (default is 'plot')
+textitle='MERIDIANI_MLzeremplace'
+texcomments='sol3'
+
+;;; load/save ARWpost-generated text files ? default is no
+;backup_data='yes'
+;already_data='yes'
+
+;-------------------------------
+;-------------------------------
+; namelist.ARWPOST parameters
+;-------------------------------
+;-------------------------------
+
+nam1=" fields = 'U,V,HGT' "		
+;; ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^
+;; CHANGE HERE FIELDS TO BE EXTRACTED 
+;; ex: tk,HGT,PSFC,U,V,W,T,tk,ICETOT,RAVE,QH2O_ICE,QH2O,PTOT,TSURF
+
+nam2=" start_date = '2024-03-21_00:00:00' " 
+nam3=" end_date   = '2024-03-22_00:00:00' "
+;; ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^
+;; CHANGE HERE START/END DATE
+
+nam4=" interval_seconds = 3700 "		
+
+;; ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ 
+;; SET INTERVAL   2h: 7400s, 4h: 14800s, 6h: 22200s, 12h: 44400s	
+
+;nam5=" interp_method = 1 "	
+nam5=" interp_method = 0 "
+;; ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ 		
+;; SET VERT. COORD. 0: eta levels, 1: height (inc) or pressure (dec)
+tabnam=[0.,50.,1.]
+;tabnam=[8., 9., 0.1]
+;; ^ ^ ^ ^ ^ ^ ^ ^ ^
+;; SET HEIGHT/PRESSURE LEVELS WITH [first alt, last alt, step]
+
+;nest='d03'  
+;; ^ ^ ^ ^
+;; SET NEST
+
+
+
+;----------------------------------------------------
+;----------------------------------------------------
+; what do you want to plot ?
+; THIS MUST BE SET ACCORDINGLY TO PREVIOUS SECTION
+;   - do not plot a field not extracted
+;   - do not ask for more plot than data available
+;----------------------------------------------------
+;----------------------------------------------------
+
+num=24		   	;; how many plots ?
+
+
+field1='U'		;; FILLED
+;field2='HGT'		;; CONTOURED
+winds=['U','V']		;; VECTORS
+topo=1
+
+
+;;; VORTICITY
+;field1='HGT' & winds=['U','V'] & topo=1
+
+
+;----------------------------------
+;----------------------------------
+; what kind of plot do you want ? 
+;----------------------------------
+;----------------------------------
+
+;; first is 1
+plot='map' & level=zeremplace	
+;plot='meridional' & nlon=89
+;plot='zonal' & nlat=66
+
+
+;---------;
+; special ;
+;---------;
+;;; SEA-LEVEL PRESSURE
+;field1='PSFC' & winds=['tk','HGT'] & topo=1 & plot='map' & level=7
+;;; HORIZONTAL WIND VELOCITY
+;field1='U' & winds=['U','V'] & topo=1 & plot='map' & level=9
+
+useidlfile='false' ;; if you are just changing what is below...
+extract='no' ;; SPECIFIC FOR ATLAS
+
+
+;----------------------------
+;----------------------------
+; change plot settings 
+;----------------------------
+;----------------------------
+
+;; uncomment to modify default plot settings
+;; | | | | | | | | | | | | | | | | | | | | |
+;; v v v v v v v v v v v v v v v v v v v v v
+
+;;;
+;;; PLOT TITLES
+;;;
+;subtitle_user='-- LMD Martian Mesoscale Model --'            ;; grepALL
+;title_user='Vertical Wind (!Nm!N.s!U-1!N)'     ;; grepALL
+;title_axis=['x coord (km)','y coord (km)']     ;; grepALL
+
+;;;
+;;; COLOR TABLES
+;;;
+;flag_cb='false'                ;; grepALL
+;format='(F4.1)'                  ;; grepALL
+;colors=128                      ;; grepALL
+;pal=39                          ;; grepALL
+;; GOOD COLOR TABLES: 4, 18, 22, 16, 37, 33, 39
+
+;;;
+;;; FILL LIMITS
+;;;
+minfield_init= 00.      ;; grepALL
+maxfield_init= 25.  	;; grepALL
+
+lim_max = maxfield_init & w=where((what_I_plot ge lim_max) and (what_I_plot le 1e9)) & if (w[0] ne -1) then what_I_plot[w]=lim_max ;; grepALL
+lim_min = minfield_init & w=where(what_I_plot le lim_min) & if (w[0] ne -1) then what_I_plot[w]=lim_min ;; grepALL
+;lim_blank = 0.2 & w=where(abs(what_I_plot) le lim_blank) & if (w[0] ne -1) then what_I_plot[w]=missing_value ;; grepALL
+
+;;;
+;;; WINDS
+;;;
+windex=20.	;; grepALL
+stride=5.	;; grepALL
+
+;;;
+;;; CONTOUR
+;;;
+;overcontour=overcontour-mean(overcontour)	;; grepALL
+lev=-10. + 0.5*findgen(50) ;; grepALL
+
+;;;
+;;; AXIS
+;;;
+;isotropic='false'       ;; grepALL
+intervalx=2.0            ;; grepALL
+intervaly=2.0             ;; grepALL
+
+;;;
+;;; MAP LIMITS 
+;;;
+windowx=[-20.,08.]       ;; grepMAP
+windowy=[-16.,12.]       ;; grepMAP
+
+;;;
+;;; VERTICAL SECTION LIMITS
+;;;
+;minalt=-4.		;; grepSEC
+;maxalt=16.		;; grepSEC
+;minspace=-30.   	;; grepSEC
+;maxspace=0.   		;; grepSEC
+
+;;
+;; METRIC UNITS FOR VERTICAL SECTION
+;;
+;factor=20.	   ;; grepSEC
+;space=space*60. & spacekm='true'   	;; grepSEC
+;minspace=minspace*60./factor       	;; grepSEC
+;maxspace=maxspace*60./factor       	;; grepSEC
+;intervalx=round(intervalx*60./factor)   ;; grepSEC
+
+;;;
+;;; TRICKS
+;;;
+
+;; pour tracer juste les vecteurs sur un fond uni ou vide
+;pal=0						;; 1/4 grepMAP
+;what_I_plot(*,*)=what_I_plot(*,*)*0.+0.2	;; 2/4 grepMAP
+;what_I_plot(0,0)=0.				;; 3/4 grepMAP
+;flag_cb='false'					;; 4/4 grepMAP
+
+;;; truc pour tracer juste les contours et une zone grisee de topo 
+;pal=0                                           ;; 1/9 grepALL
+;w=where(abs(what_I_plot) lt missing_value) 	;; 2/9 grepALL
+;what_I_plot[w]=0.   				;; 3/9 grepALL
+;w=where(abs(what_I_plot) gt missing_value) 	;; 4/9 grepALL
+;what_I_plot[w]=0.75 				;; 5/9 grepALL
+;w=where(what_I_plot eq 0.) 			;; 6/9 grepALL
+;what_I_plot[w]=missing_value   			;; 7/9 grepALL
+;what_I_plot(0,0)=1. & what_I_plot(1,0)=0.	;; 8/9 grepALL
+;flag_cb='false'                         	;; 9/9 grepALL
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;; POUBELLE
+
+
+;; DEFAULT: ARWPOST.EXE ALREADY RUN (i.e. input.ctl and input.dat already there)
+;; UNCOMMENT FOLLOWING LINE TO EXTRACT FILES 
+;extract='yes'   ;;   EXECUTE ARWPOST.EXE
+                ;;   WITH THE FOLLOWING PARAMETERS :
+
+
+;@map_sea_level.idl
+;@map_ertel_vorticity.idl
+;field1='HGT'
+;field2='U'
+;winds=['U','V']
+;topo=1
+
+
+;winds=['U','V'] & field1='SWDOWN' & topo=1
+;winds=['V','W'] & field1='V' 
+;field1='ICETOT' & topo=1
+;field1='RAVE' & topo=1
+;field1='QH2O_ICE' & topo=1
+;field1='QH2O' & winds=['U','W']
+;field1='QH2O' & field2='W'
+;field1='QH2O' & winds=['U','W']
+;field1='QH2O_ICE' & field2='tk'
+;field1='tk' & topo=1
+;field1='V' & field2='V'
+;field1='W' & winds=['V','W']
+;field1='tk' & winds=['V','W']
+;field1='tk'
+;field1='W' & topo=1
+;field1='TSK' & topo=1
+;field1='U' & winds=['U','V'] & topo=1
+;winds=['V','W'] & field1='V'
+;winds=['V','W'] & field1='W'
+;field1='U' & winds=['U','V'] & topo=1
+;field1='HGT' & field2='HGT' 
+;field1='U' & winds=['U','V'] ;& topo=1
+;field1='PSFC' & winds=['U','V'] & field2='W'
+;field1='W' & winds=['U','V'] & field2='PSFC'
+;field1='TSURF' & topo=1 ;& winds=['U','V']
+;field1='T' & topo=1 & winds=['U','V']
+;field1='PSFC' & winds=['tk','HGT'] & topo=1
+;field1='tk' & topo=1
+;field1='tk' & winds=['U','V'] & topo=1
+;field1='T' & field2='T'
+;field1='T' & winds=['U','V'] 
+;field1='HGT' & winds=['HGT','HGT'] 
+

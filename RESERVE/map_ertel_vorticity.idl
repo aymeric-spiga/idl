@@ -1,0 +1,15 @@
+;----------------------------
+; ERTEL POTENTIAL VORTICITY
+;----------------------------
+
+; -- keep --
+plot='map'
+field1='T'
+winds=['U','V']
+; -- keep --
+
+colors=32
+field2=''
+range=0.
+topo=0
+level=-1

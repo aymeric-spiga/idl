@@ -1,0 +1,87 @@
+;;---------------------------------------
+;  REPORT
+;
+;  **** DO NOT MODIFY ****
+;
+;  set parameters in plot.def then type:
+;
+;  @report.idl
+;
+;;---------------------------------------
+
+
+field1='' & field2='' & winds=''
+backup_data='no' & already_data='no'  	
+datafolder='./' & plotfolder='./'
+topo=0
+extract='no'
+
+textitle='plot'
+texcomments='plot'	
+
+SPAWN, '\rm user.idl'
+SPAWN, 'grep -v grep plot.def > user.idl'
+
+;; to avoid dumb and useless warnings from IDL
+space=0. & altitude=0. & lon=0. & lat=0.
+what_I_plot=0. & title_user='' & missing_value=0.
+
+@user.idl
+if (nam5 eq " interp_method = 0 ") then coord='model_level'
+if ((nam5 eq " interp_method = 1 ") and (tabnam(0) lt tabnam(1))) then coord='height'
+
+.compile call_arwpost
+if (extract eq 'yes') then call_arwpost, nam1, nam2, nam3, nam4, nam5, tabnam
+
+denom=plot+'_'+coord+'_'+field1
+if ((field2 ne '') and (topo eq 0)) then denom=denom+'_'+field2
+if (topo eq 1) then denom=denom+'_HGT'
+if (winds(0) ne '') then denom=denom+'_'+winds(0)+winds(1)
+
+if (already_data eq 'yes') then SPAWN, 'ln -sf  '+datafolder+'/'+coord+'.input.ctl input.ctl'
+if (already_data eq 'yes') then SPAWN, 'ln -sf  '+datafolder+'/'+coord+'.input.dat input.dat'
+
+SPAWN, '\rm param_plot.idl'
+SPAWN, 'grep grepALL plot.def > param_plot.idl'
+if ((plot eq 'meridional') or (plot eq 'zonal')) then SPAWN, 'grep grepSEC plot.def >> param_plot.idl'
+if (plot eq 'map') then SPAWN, 'grep grepMAP plot.def >> param_plot.idl'
+.compile map_latlon
+.compile section
+
+!p.charthick = 2.0
+!p.thick = 3.0
+!x.thick = 2.0
+!y.thick = 2.0
+
+for i=1,num do $
+        out_wrf, $
+        plot=plot, $
+        field1=field1, $
+        field2=field2, $
+        when=i, $
+        winds=winds, $
+        level=level,$
+        save_data=yeah,$        ;; data is loaded only once
+        topo=topo,$
+;        range=range,$
+        colors=colors, $
+        nlon=nlon, $
+        nlat=nlat, $
+        save_ps=denom+string(1000+i,'(I0)')
+
+SPAWN, 'touch report.comments'
+SPAWN, '\rm report.comments'
+SPAWN, 'echo '+textitle+' > report.comments'
+SPAWN, 'echo '+texcomments+' >> report.comments'
+SPAWN, 'rm -f '+denom+'_.ps'
+print, 'executing ... ','base '+denom+'????.ps < report.comments'
+SPAWN, 'base '+denom+'????.ps < report.comments'
+SPAWN, 'mv -f base.ps '+denom+'_.ps'
+
+SPAWN, 'mv -f ./'+denom+'????.ps '+plotfolder+'/'
+SPAWN, 'mv -f ./'+denom+'_.ps '+plotfolder+'/'
+if (backup_data eq 'yes') then SPAWN, 'cp -f namelist.ARWpost '+datafolder+'/'+coord+'.namelist.ARWpost'
+if (backup_data eq 'yes') then SPAWN, 'cp -f input.ctl '+datafolder+'/'+coord+'.input.ctl'
+if (backup_data eq 'yes') then SPAWN, 'cp -f input.dat '+datafolder+'/'+coord+'.input.dat'
+
+SPAWN, 'cp -f plot.def '+plotfolder+'/'+denom+'.def'

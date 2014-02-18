@@ -1,0 +1,103 @@
+;
+; FILL HERE SOME FIELD-DEPENDENT SETTINGS 
+;
+
+case field1 of
+'HGT': begin 
+        title='Topography (km)'
+        pal=16
+        format='(F7.0)'
+	what_I_plot=what_I_plot/1000.
+end
+'tk': begin
+        title='Temperature (K)'
+        pal=3
+        format='(F4.0)'
+end
+'TSURF': begin
+        title='Surface Temperature (K)'
+        pal=3
+	format='(F4.0)'
+	no3D='true'
+end
+'U': begin
+        title='Zonal wind (!Nm!N.s!U-1!N)'
+        if (winds(0) eq 'U') then title='Wind field (!Nm!N.s!U-1!N)'
+        pal=33
+end
+'V': begin
+        title='Meridional wind (!Nm!N.s!U-1!N)'
+        if (winds(0) eq 'V') then title='Wind field (!Nm!N.s!U-1!N)'
+        pal=33
+end
+'T': begin
+	print, 'coucou'
+	what_I_plot = what_I_plot + 220.
+	title='Potential temperature (K)'
+end
+'W': begin
+        title='Vertical wind (!Nm!N.s!U-1!N)'
+        pal=33  ;;pal=16
+        format='(F6.2)'
+end
+'ICETOT': begin
+	title='Water ice column (!7l!3m-pr)'
+	pal=22
+	format='(F5.1)'
+	what_I_plot=what_I_plot*1000.
+end
+'MTOT': begin
+        title='Water vapor column (!7l!3m-pr)'
+        pal=22
+        format='(F5.1)'
+        what_I_plot=what_I_plot*1000.
+end
+'RAVE': begin
+	title='Average water ice radius (!7l!3m)'
+	pal=22
+	format='(F5.1)'
+	what_I_plot=what_I_plot*1e6
+end
+'RICE': begin
+        title='Water ice radius (!7l!3m)'
+        pal=22
+        format='(F5.1)'
+        what_I_plot=what_I_plot*1e6
+end
+'QH2O': begin
+        title='Water vapor mixing ratio (ppm)'
+        pal=33
+        format='(F5.1)'
+	format='(I0)'
+        what_I_plot=what_I_plot*1e6
+end
+'QH2O_ICE': begin
+        title='Water ice mixing ratio (ppm)'
+        pal=22
+        format='(F5.1)'
+        format='(I0)'
+        what_I_plot=what_I_plot*1e6
+end
+'USTM': begin
+        title='Friction velocity (!Nm!N.s!U-1!N)'
+        pal=22
+        format='(F4.2)'
+        no3D='true'
+end
+else: begin
+	title=''
+	pal=33
+	format='(F6.2)'
+end
+endcase
+
+case field2 of
+'T': begin
+        overcontour = overcontour + 220.
+end
+;'HGT': begin
+;	overcontour = overcontour/1000.
+;end
+else:
+endcase
+

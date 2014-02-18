@@ -1,0 +1,16 @@
+;------------------
+;PRESSURE SEA LEVEL
+;------------------
+
+; -- keep --
+IF (coord ne 'model_level') THEN STOP
+plot='map'
+level=1		;;necessary for surface fields
+field1='PSFC'
+winds=['tk','HGT']
+; -- keep --
+
+colors=32
+field2=''
+range=0.
+topo=1

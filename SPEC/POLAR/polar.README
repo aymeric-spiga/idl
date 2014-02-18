@@ -1,0 +1,12 @@
+polar_topo : vieux (trace des cartes 2D en projection polaire)
+polar_w : trace avec map-set
+polar_uv : trace sans map-set et avec winds possible // avec map-set commente
+
+profile_uvt pour un profil
+
+map_uvt est un vieux truc, non OK pour tracer hors des poles
+
+
+GW studies with Francesca
+polaract
+polar

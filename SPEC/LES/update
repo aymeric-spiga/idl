@@ -1,0 +1,107 @@
+#! /bin/bash
+
+cd PLAN_100m_145_145_101_12km/case_I/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+
+cd PLAN_100m_45_45_71_10km/case_B/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+cd PLAN_100m_45_45_71_10km/case_C/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+cd PLAN_100m_45_45_71_10km/case_I/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+
+cd REAL_100m_145_145_201_15km/case_C/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+
+cd REAL_100m_145_145_201_20km/case_C/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+
+cd REAL_100m_45_45_71_10km/case_A/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+cd REAL_100m_45_45_71_10km/case_B/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+cd REAL_100m_45_45_71_10km/case_C/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+cd REAL_100m_45_45_71_10km/case_C_low_ck/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+cd REAL_100m_45_45_71_10km/case_C_start10/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+cd REAL_100m_45_45_71_10km/case_I/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+
+cd REAL_50m_145_145_201_12km/case_A/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+cd REAL_50m_145_145_201_12km/case_B/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+cd REAL_50m_145_145_201_12km/case_C/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+cd REAL_50m_145_145_201_12km/case_I/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+cd REAL_50m_145_145_201_12km/case_HIGH/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+
+cd REAL_50m_201_201_201_12km/case_C/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+
+cd REAL_50m_241_241_201_12km/case_C/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+
+cd REAL_100m_145_145_101_12km/case_C/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+
+cd REAL_100m_73_73_151_15km/case_C/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+
+cd REAL_100m_101_101_151_15km/case_C/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+
+cd REAL_100m_101_101_201_15km/case_C/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+
+cd REAL_100m_73_73_201_15km/case_C/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+
+cd REAL_100m_241_241_151_15km/case_C/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+
+cd REAL_50m_181_181_201_12km/case_C/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+
+cd REAL_50m_145_145_251_10km/case_C/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+
+cd REAL_100m_181_181_201_15km/case_C/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+
+cd REAL_100m_181_181_201_15km/case_A/
+echo "getturb, noplot='1' & exit" | /opt/idl-6.4/idl/bin/idl #> logidl 2> logidl_err &
+cd ../../
+

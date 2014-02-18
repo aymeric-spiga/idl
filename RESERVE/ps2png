@@ -1,0 +1,52 @@
+#! /bin/bash
+# A. Spiga - October-December 2008
+# use: ps2png 
+# options: -r 200 indicates a resolution of 200
+#          -a indicates the alternate use of ps2epsi 
+
+##########
+resol=150
+##########
+
+while getopts "r:a" options; do
+  case $options in
+   r ) resol=${OPTARG} 
+       echo conversion resolution is ${resol} resolution ;;
+   a ) yeahyeah=1
+  esac
+done
+
+
+if [[ $(ls | grep "\.ps") != "" ]]
+then
+	if [[ "${yeahyeah}" == "1" ]]
+	then
+		echo convert $(ls | grep "\.ps" | wc -l) ps files with ps2epsi
+		find *.ps -exec ps2epsi {} \; 2> /dev/null
+		rename -f 's/.epsi/.eps/' *.epsi
+	else
+		echo convert $(ls | grep "\.ps" | wc -l) ps files with convert		
+		find *.ps -exec convert {} '{}.eps' \;
+		rename -f 's/.ps.eps/.eps/' *.ps.eps
+	fi
+fi
+
+if [[ $(ls | grep "\.eps") != "" ]]
+then
+echo convert $(ls | grep "\.eps" | wc -l) eps files
+find *.eps -exec gs -sDEVICE=png16m -dTextAlphaBits=4 -sOutputFile={}.png -dNOPAUSE -dBATCH -dEPSCrop -r${resol}x${resol} {} > /dev/null 2> /dev/null \;
+rename -f 's/.eps.png/.png/' *.eps.png
+fi
+
+#if [[ $(which pngnq) != "" ]]
+#then
+#echo optimizing ...
+#pngnq -vf -s1 *.png > /dev/null 2> /dev/null
+#rename -f 's/-nq8.png$/.png/' *.png
+#fi
+
+##if [[ $(which optipng) != "" ]]
+##then
+##echo optimizing 2 ...
+##optipng -o7 *.png > /dev/null 2> /dev/null
+##fi

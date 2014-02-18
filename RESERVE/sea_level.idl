@@ -1,0 +1,323 @@
+
+if ((winds(0) eq 'tk') and (winds(1) eq 'HGT')) then begin
+
+print, 'computing sea-level pressure'
+title='Reduced surf. pressure (Pa)'
+;title='Equiv. Temperature (K)'
+pression=what_I_plot
+
+
+;what_I_plot = what_I_plot + 30.
+;overvector_x = overvector_x*0. + overvector_x(0,0) 
+
+;;
+;; TGCM
+;;
+;nx=n_elements(overvector_y(*,0))
+;ny=n_elements(overvector_y(0,*))
+;tgcm=(  overvector_x(0,0)+ $
+;        overvector_x(nx-1,0)+ $
+;        overvector_x(0,ny-1)+ $
+;        overvector_x(nx-1,ny-1) ) / 4.
+;print, overvector_x(0,0), overvector_x(nx-1,0), overvector_x(0,ny-1), overvector_x(nx-1,ny-1)
+;print, tgcm
+;;
+;; USUAL SYSTEMATIC BIAS
+;;
+;what_I_plot = what_I_plot + 20.
+;;
+;; ROUGH T EFFECT ON RADIATIVE TRANSFER
+;;
+;print, mean(overvector_x)
+;caca=tgcm - overvector_x
+;;caca=tgcm - mean(overvector_x)
+;what_I_plot = what_I_plot - caca
+;;
+;; TEMP FOR HYPSOMETRIC
+;; - attenue un peu - peu d'effets
+;overvector_x = overvector_x*0. + tgcm 
+;;
+;; NOISE OF 2.2 Pa
+;;
+;what_I_plot = what_I_plot + 2.2*(2.*(RANDOMU(seed,nx,ny)-0.5))
+
+;;; NON
+;;;ecart_t = 222. - overvector_x		;; tgcm - tmeso
+;;;ecart_p = - ecart_t			;; pgcm - pmeso
+;;;yeahyeah = what_I_plot - ecart_p  	;; pmeso + pgcm - pmeso = pgcm
+;;;what_I_plot = yeahyeah
+
+;;;;marche bof
+;;overvector_y=CONGRID(overvector_y,nx*50,ny*50)
+;;overvector_y=shift(overvector_y,1,1)
+;;overvector_y=CONGRID(overvector_y,nx,ny)
+
+
+
+;;augmen=10./100.
+;;augmen=0.
+;;mmm=mean(overvector_y)
+;;overvector_y=overvector_y-mmm
+;;overvector_y=overvector_y*(1.+augmen)
+;;print, max(overvector_y), min(overvector_y)
+;;overvector_y=mmm+overvector_y
+;;print, max(overvector_y), mean(overvector_y), min(overvector_y)
+
+
+;;*******************************BRUIT
+;;;;50m limite ...
+;noise=25.
+;print, max(overvector_y), mean(overvector_y), min(overvector_y)
+;overvector_y=overvector_y + noise*(2.*(RANDOMU(seed,nx,ny)-0.5))
+;print, max(overvector_y), mean(overvector_y), min(overvector_y)
+;;*******************************BRUIT
+
+
+
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+H=192.*overvector_x/3.72	;;unit is m
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+zref=mean(overvector_y)         ;;topo (m)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+goto, notest
+;;;****************************************************************************************
+	;;; TEMPERATURE
+	;temp_meso=overvector_x	   ;;save if needed
+	;overvector_x=mean(overvector_x)
+	;H=192.*overvector_x/3.72
+	;tempbias=temp_meso-overvector_x
+
+;; PRESSURE
+;ptopo=610.*exp(-overvector_y/H) & what_I_plot=ptopo    ;; perfect case
+
+		;w1=where((overvector_y - median(overvector_y)) gt 200.) & w2=where((overvector_y - median(overvector_y)) lt -200.)
+		;tempbias=overvector_x*0. & tempbias[w1] = -20. & tempbias[w2] = +20.
+
+;; TEMPBIAS IN SCALE HEIGHT 
+;tempbias=mean(overvector_x)-overvector_x
+;tempbias=-10.
+
+;; ZREF
+;zref=0.	
+
+;; REFPRES
+;refpres=610.
+
+
+;;
+;; perfect case
+;;
+;ptopo=610.*exp(-overvector_y/H) & what_I_plot=ptopo 
+;tempbias=222.-overvector_x
+;zref=0.
+;refpres=610.
+
+;;
+;; comp OMEGA
+;;
+;tcst = 222. ;;230. 226. 206.
+;tempbias=tcst-overvector_x
+zref=-945.43469
+;refpres=0.
+;zref=-200.
+;zref=-400.
+;zref=-95.
+;;;****************************************************************************************
+notest:
+
+;goto, caca
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                       ;;
+;; HYPSOMETRIC EQUATION  ;;
+;;			 ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;
+; recalculate H with temperature bias
+;
+if (n_elements(tempbias) eq 0) then tempbias=0.	;; verif: donne champ constant quand perfect
+H=192.*(overvector_x+tempbias)/3.72
+print, 'zref', zref, ' meanH', mean(H)
+;
+; hypsometric
+;
+what_I_plot=what_I_plot*exp((overvector_y-zref)/H)
+;
+; anomaly
+;
+if (n_elements(refpres) eq 0) then refpres=median(what_I_plot)
+if (refpres eq -9999) then refpres=median(what_I_plot)
+what_I_plot=what_I_plot-refpres
+refpres=-9999.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+caca:
+
+
+goto, coucou
+
+
+	;;for coco=0,100 do begin
+	;;altchosen = 100. - float(coco*10.)
+	;;print, altchosen
+
+
+;altchosen=-915.93644
+;altchosen=200.
+;altchosen=max(overvector_y)
+;altchosen=min(overvector_y)
+;altchosen=mean(overvector_y)
+;altchosen=0.
+;altchosen=-2000.
+;altchosen=-200.
+;altchosen=200.
+;altchosen=-400.
+;altchosen=1000.
+;altchosen=200.  ;; le meilleur match entre H et RT1km/g ATTENTION, NON !!
+;altchosen=-200.  ;; le meilleur pour 13h
+;altchosen=-400. ;;Tequiv trop hautes
+;altchosen=-90.
+;altchosen=-93.
+;altchosen=-95.
+;altchosen=-400.
+;altchosen=-890.
+
+altchosen=-50.
+;read, altchosen, prompt='alt?'
+
+;;-----------------------;;
+;; find nearest point !  ;;
+;;-----------------------;;
+dis=overvector_y-altchosen & w=where(abs(dis) eq min(abs(dis))) & zref=overvector_y[w(0)] & Pref=pression[w(0)]
+print, zref, Pref
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;
+;hache=192.* overvector_x / 3.72 & what_I_plot2=hache*alog(Pref/what_I_plot) - (overvector_y-altchosen)
+;what_I_plot=what_I_plot2
+;print, min(what_I_plot2), max(what_I_plot2), mean(what_I_plot2)
+;goto, coucou
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;-------------------------;;
+;; POSSIBLE 0/0 PROBLEMS   ;;
+;;-------------------------;;
+w=where(abs(alog(Pref/what_I_plot)) lt 0.02) & if (w(0) ne -1) then what_I_plot[w]=!Values.F_NAN
+w=where(abs(overvector_y-zref) lt 100.) & if (w(0) ne -1) then what_I_plot[w]=!Values.F_NAN 
+
+;;-------------------------;;
+;; EQUIVALENT TEMPERATURE  ;;
+;;-------------------------;;
+;
+; H
+;
+what_I_plot=(overvector_y-zref)/alog(Pref/what_I_plot)/1000.
+;
+; T
+;
+what_I_plot=what_I_plot*3.72*1000./192.			
+;what_I_plot=what_I_plot - overvector_x
+
+
+;;-----------------------;;
+;; MOYENNE OK AVEC NANs  ;;
+;;-----------------------;;
+;
+;w=where(FINITE(what_I_plot) ne 0) & moyen=mean(what_I_plot[w]) & print, moyen
+;what_I_plot=what_I_plot-moyen
+
+coucou:
+
+	;;endfor
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+
+;what_I_plot=what_I_plot-mean(what_I_plot)
+
+
+
+;;M1
+;what_I_plot=what_I_plot-ptopo-mean(what_I_plot-ptopo)
+
+
+;what_I_plot=caca
+;what_I_plot=tempbias
+;what_I_plot=topo_ecart
+
+
+
+;level_1km=6
+;;
+;; mean temperature for the whole period
+;;
+;temptmp=reform(u[*,*,level_1km,*])
+;meantemp=total(temptmp,3)/n_elements(temptmp(0,0,*))
+;Hmean=192.*meantemp/3.72
+;;
+;; mean surface pressure for the whole period
+;;
+;temppres=reform(var[*,*,theloop,*])
+;meanpres=total(temppres,3)/n_elements(temppres(0,0,*))
+;
+;
+;        ;** HYDROSTATIC REDUCTION TO LEVEL OF REFERENCE
+;	
+;	overvector_x=reform(u[*,*,level_1km,nt])        ;;T 1km
+;	H=192.*overvector_x/3.72        ;unit is m
+;
+;        overvector_y=reform(v[*,*,0,nt])        ;;topo (m)
+;        zref=mean(overvector_y)
+;        	;zref=median(overvector_y)
+;        	;zref=(max(overvector_y)-min(overvector_y))/2.
+;        	;zref=3000.
+;        print, 'zref', zref
+;
+;	;
+;	; HYPSOMETRIC EQUATION
+;	;
+;;**********
+;H=Hmean
+;;**********
+;	what_I_plot=what_I_plot*exp((overvector_y-zref)/H)
+;	meanpres=meanpres*exp((overvector_y-zref)/Hmean)
+;
+;
+;;
+;; pressure anomaly
+;;
+;what_I_plot=what_I_plot-meanpres
+;
+;
+;;presoro=610.*exp(overvector_y/10000.)
+;;what_I_plot=what_I_plot-presoro
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+
+overvector_x=0
+overvector_y=0
+
+endif

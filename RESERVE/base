@@ -1,0 +1,54 @@
+#!/bin/bash
+
+echo 'type the title'
+read title
+echo 'type the caption'
+read caption
+
+quality=100
+
+
+rm -rf basefig
+mkdir basefig
+cd basefig
+cp ../base.eps fig1.eps
+cp ../base.eps fig2.eps
+cp ../base.eps fig3.eps
+cp ../base.eps fig4.eps
+cp ../base.eps fig5.eps
+cp ../base.eps fig6.eps
+cd ..
+
+convert -density ${quality}x${quality} -crop 0x0 $1 basefig/fig1.eps
+echo 'converted 1'
+
+convert -density ${quality}x${quality} -crop 0x0 $2 basefig/fig2.eps
+echo 'converted 2'
+
+convert -density ${quality}x${quality} -crop 0x0 $3 basefig/fig3.eps
+echo 'converted 3'
+
+convert -density ${quality}x${quality} -crop 0x0 $4 basefig/fig4.eps
+echo 'converted 4'
+
+convert -density ${quality}x${quality} -crop 0x0 $5 basefig/fig5.eps
+echo 'converted 5'
+
+convert -density ${quality}x${quality} -crop 0x0 $6 basefig/fig6.eps
+echo 'converted 6'
+
+echo $7
+
+sed s/thetitle/${title}/g basefig.tex | sed s/thecaption/${caption}/g > basefig_temp.tex 
+sed s/basefig/basefig_temp/g base.tex > base_temp.tex
+latex base_temp.tex > base_temp.tmp 
+
+mv -f base_temp.dvi base.dvi
+
+\rm base_temp*
+\rm basefig_temp.tex
+
+dvips -o base.ps base.dvi 
+
+xdvi base.dvi 
+\rm base.dvi

@@ -1,0 +1,129 @@
+pro gravitwave
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+file='../EN_COURS/gw/ok_hires_wrfout_d01_9999-09-09_09:00:00_z'
+file='../EN_COURS/gw/_wrfout_d01_9999-09-09_09:00:00_z'
+file='../OUTILS_CONVERSION/wrfout_d01_9999-09-09_09:00:00_z'
+charvar='W' & charvarc='W'
+charvar='tk' & charvarc='W'
+charvar='tk' & charvarc='W' & cond=1
+;charvar='tpot' & charvarc='tpot'
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;
+;
+;
+what_I_plot=0. & overcontour=0.
+SPAWN, '\rm param_plot.idl ; cp gravitwave_inc.pro param_plot.idl'
+;
+;
+;
+getcdf, $
+        file=file, $
+        charvar=charvar, $
+        invar=invar
+getcdf, $
+        file=file, $
+        charvar=charvarc, $
+        invar=invarc
+getcdf, $
+        file=file, $
+        charvar='vert', $
+        invar=vert
+getcdf, $
+        file=file, $
+        charvar='PTOT', $
+        invar=columnp
+;
+;
+;
+for nt=1,10 do begin
+zefile='gravitwave_'+charvar+'_'+charvarc+'_'+string(nt+100,'(I0)')
+if (n_elements(cond) ne 0) then zefile = 'cond_' + zefile
+;
+;
+;
+  PS_Start, filename=zefile+'.ps'
+  print, zefile+'.ps'
+  !P.Charsize = 1.2
+  !p.charthick = 2.0
+  !p.thick = 2.0
+  !x.thick = 2.0
+  !y.thick = 2.0
+;
+;
+;
+what_I_plot = reform(invar(*,1,*,nt))
+
+
+   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+   file='../LMD_MM_MARS/TESTGW/input_sounding' & header='' & nlines_header=1 & ncol = 5
+   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+   nlines = FILE_LINES(file)-nlines_header & data=FLTARR(ncol,nlines)
+   OPENR, lun, file, /GET_LUN & READF, lun, header & READF, lun, data & CLOSE, lun & FREE_LUN, lun
+   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+   mcd_tpot        = reform(data(1,*))
+   mcd_column      = reform(data(0,*)) ;& mcd_column = ( mcd_column - mcd_column(0) ) / 1000.
+
+   overplot = reform(what_I_plot(30,*))
+   overplot_column = vert/1000.
+   what_I_plot = mcd_tpot
+   column = mcd_column/1000.
+   mention = ''
+;   minfield_init = 0.0001
+;   maxfield_init = 2000.
+   minfield_init = 100.
+   maxfield_init = 240.
+   alt = [0.,100.]
+   SPAWN, '\rm param_plot.idl'
+   profile, $
+        what_I_plot, $                          ; 1D vertical profile
+        column, $                               ; altitudes     
+        alt=alt, $                              ; altitude range [altmin, altmax]
+        minfield=minfield_init, $               ; minimum value of plotted field (=0: calculate)
+        maxfield=maxfield_init, $               ; maximum value of plotted field (=0: calculate)
+        inprofile=overplot, $                   ; another vertical profile to overplot
+        incolumn=overplot_column, $             ; altitudes of the other vertical profile (in case /= column)
+;        discrete=discrete, $                    ; show the profile points (= type of points in !psym)
+;        title_plot=title_user, $                ; title of the plot ('Profile' is default)
+;        title_axis=title_axis, $                ; title of the [x,y] axis (['Field','Altitude'] is default)
+        mention=mention                         ; add text precision within the plot window (default is nothing or '')
+
+PS_End, /PNG
+endfor
+end
+
+
+   if (charvar eq 'tk') then what_I_plot = what_I_plot - 20.  ;; -20. because seasonal variability
+   if (n_elements(cond) ne 0) then begin
+     column = columnp
+     @tempcond.inc
+     yeye = reform(overplot(*,1,*,nt))
+     w = where(yeye le 0.) & yeye[w] = 0. 
+     what_I_plot = what_I_plot - yeye 
+   endif
+overcontour = reform(invarc(*,1,*,nt))
+xx = findgen(n_elements(what_I_plot(*,0)))
+zz = vert / 1000.
+;
+;
+;
+map_latlon, $
+        what_I_plot, $                          ; 2D field
+        xx, $                                   ; 1D latitude
+        zz, $                                   ; 1D longitude
+;        minfield=minfield_init, $               ; minimum value of plotted field (=0: calculate)
+;        maxfield=maxfield_init, $               ; maximum value of plotted field (=0: calculate)
+        overcontour=overcontour, $              ; another 2D field to overplot with contour lines (=0: no)
+;        overvector_x=overvector_x, $            ; wind vector - x component (=0: no)
+;        overvector_y=overvector_y, $            ; wind vector - y component (=0: no)
+;        ct=pal, $                               ; color table (33-rainbow is default)
+;        colors=colors, $                        ; number of colors/levels (32 is default)
+;        title=title_user, $                     ; title of the plot ('' is default)
+        format=format                           ; format of colorbar annotations ('(F6.2)' is default)
+;
+;
+;
+PS_End, /PNG
+endfor
+end

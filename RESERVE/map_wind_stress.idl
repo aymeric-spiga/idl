@@ -1,0 +1,14 @@
+
+; -- keep --
+;;IF (coord ne 'model_level') THEN STOP
+plot='map'
+level=1		;;necessary for surface fields
+field1='U'
+field2='V'
+winds=['PSFC','tk']
+; -- keep --
+
+colors=32
+range=[0.,0.1]
+topo=0.
+format='(F6.3)'

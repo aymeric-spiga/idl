@@ -1,0 +1,126 @@
+;;---------------------------------------
+;
+;  fill here plot parameters then type:
+;
+;  @trace.idl
+;  @report.idl
+;  @movie.idl
+;
+;;---------------------------------------
+
+;-----------------
+; initialization
+;-----------------
+winds=0.
+range=0.
+topo=0.
+colors=32
+backup_data='no' ;backup_data='yes'
+already_data='no' ;already_data='yes'
+folder='./WHERE_RESULTS_ARE/'
+
+
+;-----------------
+; check this first
+;-----------------
+num=6
+;
+;coord='height'
+coord='model_level'
+
+;----------------------------
+; general plot settings
+;----------------------------
+plot='map' & level=-1	
+plot='meridional' & nlon=-1 	;bug a corriger: 0
+;plot='zonal' & nlat=-1		;bug a corriger: 0
+
+;-------------------------------------------
+; easy access to already defined plots
+;-------------------------------------------
+;@map_sea_level.idl
+@map_winds_only.idl
+;@map_ertel_vorticity.idl
+;@map_wind_stress.idl
+
+;------------------------
+; user-defined settings
+;------------------------
+; keywords : plot, winds, field1, field2, range, topo, colors
+;------------------------
+
+;field1='tk'
+;nlon=100
+;range=[200,250]
+
+
+
+
+title_user=''     ;to avoid a warning later
+what_I_plot=0.    ;to avoid a warning later
+missing_value=0.  ;to avoid a warning later
+space=0.
+;;***************************************************
+;; below this line do not modify number of lines
+;; because this will be copied ... with command tail
+;; comment a line if you do not need it :)
+;;***************************************************
+;;------------------------
+;; modify plot parameters
+
+;; SECTION: 
+title_user, title_axis (2) 
+        xtitle='Horizontal coordinate'
+        ytitle='Altitude'
+endif else begin
+        xtitle=title_axis(0)
+        ytitle=title_axis(1)
+endelse
+
+if (n_elements(space) eq 0) then begin
+        space=findgen(n_elements(what_I_plot(*,0)))
+endif
+if (n_elements(altitude) eq 0) then begin
+        altitude=findgen(n_elements(what_I_plot(0,*)))
+endif
+
+if (n_elements(minfield_init) eq 0) then minfield_init=0.
+if (n_elements(maxfield_init) eq 0) then maxfield_init=0.
+if (n_elements(minspace) eq 0) then minspace=0.
+if (n_elements(maxspace) eq 0) then maxspace=0.
+if (n_elements(minalt) eq 0) then minalt=min(altitude)
+if (n_elements(maxalt) eq 0) then maxalt=max(altitude)
+if (n_elements(colors) eq 0) then colors=32
+if (n_elements(title) eq 0) then title=''
+if (n_elements(pal) eq 0) then pal=33
+if (n_elements(format) eq 0) then format='(F6.2)'
+if (format eq '') then format='(F6.2)'
+
+if ((n_elements(overvector_x) eq 0) or (n_elements(overvector_y) eq 0)) then begin
+        overvector_x=0.
+        overvector_y=0.
+endif
+
+;
+; dilatation factor for winds
+;
+if (n_elements(overvector_x)*n_elements(overvector_y) ne 1) then space=space/factor
+
+
+
+
+
+
+;;------------------------
+;;
+space=space 
+ ;minspace=158.5 & maxspace=160.
+minalt=-3 & maxalt=7
+ ;factor=15.
+ ;windex=20.
+ ;format='(F6.3)'
+ ;title_user='Sea-level surface pressure'+title_user
+pal=33
+ ;w=where(abs(what_I_plot) ge 0.03)
+ ;if (w[0] ne -1) then what_I_plot[w]=0.03
+;;**** END ****

@@ -1,0 +1,23 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+format        = '(F6.2)'
+colors        = 64
+pal = 0 ;33 ;22 ;33
+minfield_init = 818.0 ;-1.5
+maxfield_init = 819.5 ;1.5
+ndiv = 6
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+missing_value=1.e30
+lim_max = maxfield_init & w=where((what_I_plot ge lim_max) and (what_I_plot le 1e9)) & if (w[0] ne -1) then what_I_plot[w]=lim_max
+lim_min = minfield_init & w=where(what_I_plot le lim_min) & if (w[0] ne -1) then what_I_plot[w]=lim_min
+flag_cb = 'true'
+windowx = [0.,3600.] 
+windowy = [0.,3600.] 
+intervalx = 600. 
+intervaly = 600. 
+title_axis = ['x-axis (m)','y-axis (m)']
+poscb = 0.72
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+windex = 20 
+stride = 1

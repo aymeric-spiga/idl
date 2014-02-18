@@ -1,0 +1,34 @@
+
+;
+; field1='U'
+; winds=['U','V']
+;
+
+if ( (field1 eq 'U') $
+	and (winds(0) eq 'U') $
+        and (winds(1) eq 'V')  ) then begin
+
+print, 'computing wind velocity'
+
+title='Horizontal wind velocity (!Nm!N.s!U-1!N)'
+
+u=overvector_x
+v=overvector_y
+
+help, u
+help, v
+
+velocity2=u^2+v^2
+what_I_plot=sqrt(velocity2)
+
+;overcontour=sqrt(velocity2)
+
+;;
+;; comment if you want wind vectors
+;;
+;overvector_x=0
+;overvector_y=0
+
+pal=22
+
+endif

@@ -1,0 +1,22 @@
+;subtitle_user='-- LMD Martian Mesoscale Model --'            ;; grepALL
+title_user='Friction velocity (!Nm!N.s!U-1!N) at local time 16h'     ;; grepALL
+;title_axis=['x coord (km)','y coord (km)']     ;; grepALL
+;flag_cb='false'                ;; grepALL
+;format='(I0)'                  ;; grepALL
+;colors=64                       ;; grepALL
+pal=22                          ;; grepALL
+minfield_init=0.3      ;; grepALL
+maxfield_init=1.3	;; grepALL
+lim_max = maxfield_init & w=where((what_I_plot ge lim_max) and (what_I_plot le 1e9)) & if (w[0] ne -1) then what_I_plot[w]=lim_max ;; grepALL
+lim_min = minfield_init & w=where(what_I_plot le lim_min) & if (w[0] ne -1) then what_I_plot[w]=lim_min ;; grepALL
+;lim_blank = 2. & w=where(abs(what_I_plot) le lim_blank) & if (w[0] ne -1) then what_I_plot[w]=missing_value ;; grepALL
+windex=15. ;25. ;20.	;; grepALL
+stride=3. ;2.	;; grepALL
+;overcontour=overcontour-mean(overcontour)	;; grepALL
+;lev=220. + 2.*findgen(30) ;; grepALL
+lev=-10. + 1.*findgen(30) ;; grepALL
+;isotropic='false'       ;; grepALL
+intervalx=2.            ;; grepALL
+intervaly=2.             ;; grepALL
+windowx=[-130.,-112.]        ;; grepMAP
+windowy=[-18.,-2.]     ;; grepMAP

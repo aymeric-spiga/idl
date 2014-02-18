@@ -1,0 +1,55 @@
+;;---------------------------------------
+;  REPORT
+;
+;  set parameters in user.idl then type:
+;
+;  @report.idl
+;
+;;---------------------------------------
+
+@user.idl
+
+denom=plot+'_'+coord+'_'+field1
+
+if (already_data eq 'yes') then SPAWN, 'ln -sf  '+folder+'/'+coord+'.input.ctl input.ctl'
+if (already_data eq 'yes') then SPAWN, 'ln -sf  '+folder+'/'+coord+'.input.dat input.dat'
+
+SPAWN, '\rm map_latlon_user'
+SPAWN, 'tail -15 user.idl > map_latlon_user'
+.compile map_latlon
+
+SPAWN, '\rm section_user'
+SPAWN, 'tail -15 user.idl > section_user'
+.compile section
+
+for i=1,num do $
+	out_wrf, $
+	plot=plot, $
+	field1=field1, $
+	field2=field2, $
+	when=i, $
+	winds=winds, $
+	level=level,$
+        save_data=yeah,$
+	topo=topo,$
+	range=range,$
+	colors=colors, $
+	nlon=nlon, $
+	nlat=nlat 
+
+
+SPAWN, '\rm report.comments'
+SPAWN, 'echo '+plot+' > report.comments'
+SPAWN, 'echo '+plot+' >> report.comments'
+;SPAWN, 'echo '+coord+' >> report.comments'	;;attention avec le _
+SPAWN, 'rm -f '+denom+'_.ps'
+print, 'executing ... ','base '+denom+'??.ps < report.comments'
+SPAWN, 'base '+denom+'??.ps < report.comments'
+SPAWN, 'mv -f base.ps '+denom+'_.ps'
+SPAWN, 'mv -f ./'+denom+'??.ps '+folder+'/'
+SPAWN, 'mv -f ./'+denom+'_.ps '+folder+'/'
+if (backup_data eq 'yes') then SPAWN, 'cp -f namelist.ARWpost '+folder+'/'+coord+'.namelist.ARWpost'
+if (backup_data eq 'yes') then SPAWN, 'cp -f input.ctl '+folder+'/'+coord+'.input.ctl'
+if (backup_data eq 'yes') then SPAWN, 'cp -f input.dat '+folder+'/'+coord+'.input.dat'
+
+SPAWN, 'cp -f user.idl '+folder+'/'+denom+'.idl'

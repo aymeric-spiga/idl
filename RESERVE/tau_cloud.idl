@@ -1,0 +1,68 @@
+
+;
+; winds=['ICETOT','RAVE']
+;
+
+if ( (winds(0) eq 'ICETOT') $
+	and (winds(1) eq 'RAVE') ) then begin
+
+print, 'computing water ice cloud opacity'
+
+title='Water ice cloud opacity'
+
+mc=overvector_x		;; kg/m2
+rc=overvector_y		;; m
+
+;
+; VISIBLE BENSON
+;
+rc_mic=2.
+cext=24.655	;; lambda 1 mic
+pi = 3.14159265
+qext=cext/(pi*rc_mic^2)
+print, 'q ext - benson - 1 mic ', qext
+
+;
+; 12 mic.
+;
+cext=70. ;;Wolff 2003 pour 4 mic.
+rc_mic=4.
+pi = 3.14159265
+qext=cext/(pi*rc_mic^2)
+print, 'q ext - wolff - 12 mic ', qext
+;;;Montmessin 2003
+;qext=1.
+
+;
+; .4 microns (visible)
+;
+rc_mic=2.
+cext=20.613  ;;mike
+pi = 3.14159265
+qext=cext/(pi*rc_mic^2)
+print, 'q ext - wolff - 0.4 mic ', qext
+title=title+' at 0.4 !7l!3m'
+
+;;
+;; visible .4 microns
+;;
+;qext=1.8
+;qext=2.
+
+print, 'final q ext ', qext
+
+
+;
+; CALCUL
+;
+what_I_plot = 3.*qext*mc / (4.*917.*rc)
+what_I_plot[where(FINITE(what_I_plot) eq 0)]=0.
+
+;overcontour=3.*qext*mc / (4.*917.*rc)
+;overcontour[where(FINITE(overcontour) eq 0)]=0.
+
+
+overvector_x=0
+overvector_y=0
+
+endif

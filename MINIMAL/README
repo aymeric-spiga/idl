@@ -1,0 +1,30 @@
+launch
+
+idl> example
+
+[before: cp param_plot.idl.minimal param_plot.idl]
+
+----
+
+I/O
+
+input: IDL save file example.idl
+output: ps and png figure
+
+----
+
+routines
+
+map_latlon.pro: to plot the fields
+param_plot.idl: settings for the plot (not compulsory)
+example.pro: main routine
+
+colorbar.pro, plot_vector.pro, vector.pro: needed by map_latlon.pro (from Coyote IDL and IDL for meteorology, slightly modified)
+fsc/*: to have nice postscript files (from Coyote IDL, slightly modified)(not compulsory, just have to change example.pro and use set_plot)
+
+
+added:
+profile
+section
+getcdf
+reverse_ct

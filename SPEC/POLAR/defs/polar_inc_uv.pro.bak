@@ -1,0 +1,61 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;ntime    = 7  ;; le vrai indice IDL 
+nlevel   = 0 
+filename = '/donnees/aslmd/MODELES/LMD_MM_MARS/OUTILS_CONVERSION/wrfout_d03_2024-06-20_06:00:00_zabg'
+filename = '/donnees/aslmd/MODELES/LMD_MM_MARS/OUTILS_CONVERSION/wrfout_d03_2024-06-20_06:00:00_z'
+filename = '/donnees/aslmd/MODELES/LMD_MM_MARS/OUTILS_CONVERSION/wrfout_d03_2024-06-20_06:00:00_z' & nlevel=1
+save_ps  = 'nest_polar_winds'
+;filename = '/donnees/aslmd/MODELES/LMD_MM_MARS/OUTILS_CONVERSION/wrfout_d01_2024-06-20_06:00:00_z'
+;save_ps  = 'single_polar_winds'
+;filename = '/tmp7/aslmd/one_more_nest/test/wrfout_d02_2024-06-19_06:00:00_zabg'
+;save_ps  = '2nest_polar_winds'
+
+;coord2d  = 'false'  ;; si on veut grid point coordinates ;;CHANGER windowx and windowy
+;field1   = 'HGT'  ;; omettre trace vitesse horizontale
+;field2  = 'XLAT' ;; contour 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+format        = '(I0)' ;'(F4.1)' ;'(I0)' 
+colors        =  32
+pal           =  22 ;19 ;22 ;33 ;39 ;6 ;11 ;0 ;11 ;6 ;0 ;6 ;39 ;19 
+title_user    = 'Horizontal wind (m s!U-1!N) 20m AGL'
+title_user    = 'Horizontal wind (m s!U-1!N) 6km AMR'
+title_user    = 'Horizontal wind (m s!U-1!N) 20km AMR'
+subtitle_user   = 'LMD Mars Mesoscale'
+subtitle_user   = subtitle_user + ' / UTC!D0!N = 06:00am'
+subtitle_user   = subtitle_user + ' / Ls = 160!Uo!N'
+subtitle_user   = subtitle_user + ' / dx = 12km' 
+subtitle_user   = subtitle_user + ' / nest 3'
+poscb=0.95
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; FILL LIMITS				       ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+minfield_init= 30. ;0.
+maxfield_init= 60. ;30.
+missing_value=1.e30
+lim_max = maxfield_init & w=where((what_I_plot ge lim_max) and (what_I_plot le 1e9)) & if (w[0] ne -1) then what_I_plot[w]=lim_max 
+lim_min = minfield_init & w=where(what_I_plot le lim_min) & if (w[0] ne -1) then what_I_plot[w]=lim_min 
+;;lim_blank = 0.2 & w=where(abs(what_I_plot) le lim_blank) & if (w[0] ne -1) then what_I_plot[w]=missing_value 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; WINDS				       ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+windex=50. ;25.  	;; default: 20.
+stride=5.       ;; default: 5.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; CONTOUR				       ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;overcontour=overcontour-mean(overcontour)      
+overcontour=overcontour/1000.
+lev=-10. + 0.5*findgen(50) 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; AXIS				       ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;isotropic='false'       ;; default: true
+intervalx=2.
+intervaly=2.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; MAP LIMITS                                 ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+windowx=[-42.,-26.]
+windowy=[-34.,-20.]
+

@@ -1,0 +1,55 @@
+;;---------------------------------------
+;  MOVIES
+;
+;  check parameters then type:
+;
+;  @movie.idl
+;
+;;---------------------------------------
+
+@user.idl
+
+denom=plot+'_'+coord+'_'+field1
+
+if (already_data eq 'yes') then SPAWN, 'ln -sf  '+folder+'/'+coord+'.input.ctl input.ctl'
+if (already_data eq 'yes') then SPAWN, 'ln -sf  '+folder+'/'+coord+'.input.dat input.dat'
+
+SPAWN, '\rm map_latlon_user'
+SPAWN, 'tail -15 user.idl > map_latlon_user'
+.compile map_latlon
+
+SPAWN, '\rm section_user'
+SPAWN, 'tail -15 user.idl > section_user'
+.compile section
+
+for i=1,num do $
+	out_wrf, $
+	plot=plot, $
+	field1=field1, $
+	field2=field2, $
+	when=i, $
+	winds=winds, $
+	level=level,$
+        save_data=yeah,$
+	topo=topo,$
+	range=range,$
+	colors=colors, $
+	nlon=nlon, $
+	nlat=nlat 
+
+print, 'generating movie ...'
+SPAWN, 'rm -rf temp'
+SPAWN, 'mkdir temp'
+SPAWN, 'mv -f '+denom+'??.ps temp'
+SPAWN, 'cp bigconvert200 temp'
+SPAWN, 'cd temp ; bigconvert200 *.ps ; convert -delay 60 *.png movie.gif ; cd ..'
+if (nomovie ne 'yes') then SPAWN, 'animate temp/movie.gif &' 
+print, 'done'
+SPAWN, 'mv -f temp/'+denom+'??.ps '+folder+'/'
+SPAWN, 'mv -f temp/movie.gif '+folder+'/'+denom+'.gif'
+SPAWN, 'mv -f temp/'+denom+'??.png '+folder+'/'
+if (backup_data eq 'yes') then SPAWN, 'cp -f namelist.ARWpost '+folder+'/'+coord+'.namelist.ARWpost'
+if (backup_data eq 'yes') then SPAWN, 'cp -f input.ctl '+folder+'/'+coord+'.input.ctl'
+if (backup_data eq 'yes') then SPAWN, 'cp -f input.dat '+folder+'/'+coord+'.input.dat'
+
+SPAWN, 'cp -f user.idl '+folder+'/'+denom+'.idl'

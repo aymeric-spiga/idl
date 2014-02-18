@@ -1,0 +1,10 @@
+#!/bin/csh
+# f. forget
+foreach i ( $* )
+    echo $1
+    set name = `echo $1 | sed -e 's/\./ /' `
+    echo $name[1].png
+#   convert -antialias -density 200x200 -crop 0x0 $1 $name[1].png
+gs -sDEVICE=png16m -dTextAlphaBits=4 -sOutputFile=$name[1].png -dNOPAUSE -dBATCH -dEPSCrop -r300x300 $1
+   shift
+end

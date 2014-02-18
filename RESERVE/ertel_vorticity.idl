@@ -1,0 +1,80 @@
+
+if ((field1 eq 'T') and (winds(0) eq 'U') and (winds(1) eq 'V')) $
+	or ((field1 eq 'tk') and (winds(0) eq 'U') and (winds(1) eq 'V')) $
+	or ((field1 eq 'HGT') and (winds(0) eq 'U') and (winds(1) eq 'V')) then begin
+
+;print, 'computing Ertel potential vorticity'
+;;---------------------------------------------------
+;;** ERTEL POTENTIAL VORTICITY
+;;---------------------------------------------------
+;; vort scalaire grad_theta / rho
+;;               and rho equal p / gH (because H ~ RT/g)
+;H=10.
+;g=3.72
+;for i=0, west_east-1 do begin
+;for j=0, south_north-1 do begin
+;     theta=220.+var[i,j,*,nt]
+;     dtheta_dz=DERIV(z*1000., theta)
+;     fac=dtheta_dz*H*g/z     ;;fac est EPV/(abs. vort)
+;     what_I_plot(i,j)=fac(theloop)
+;endfor
+;endfor
+;; alternative method : ksi * g * dtheta_dp
+;
+;
+;;--------------------------
+;; coriolis parameter 'f'
+;;--------------------------
+;omeg=7.0721E-5
+;coriolis=2*omeg*sin(lat*!pi/180)
+;ny=n_elements(coriolis)
+;nx=n_elements(what_I_plot(*,1))
+;f=fltarr(nx,ny)
+;for i=0,nx-1 do begin
+;for j=0,ny-1 do begin
+;	f(i,j)=coriolis(j)
+;endfor
+;endfor
+;print, 'coriolis'
+;print, mean(coriolis)
+;
+;;----------------------------------
+;; horizontal coordinates (meters)
+;;----------------------------------
+rad=3397000.
+deg_m=2*rad*!pi/360.
+dlon=deg_m*cos(y*!pi/180)
+dlat=deg_m
+xcal=(x-min(x))*dlon
+ycal=(y-min(y))*dlat
+
+;---------------------------------
+; wind gradients (s-1)
+;---------------------------------
+grad, dv_dx, overvector_y, xcal, ycal, 1
+grad, dv_dy, overvector_y, xcal, ycal, 2
+grad, du_dx, overvector_x, xcal, ycal, 1
+grad, du_dy, overvector_x, xcal, ycal, 2
+
+;;-----------------------------------------
+;; absolute and relative vorticity (s-1)
+;;-----------------------------------------
+;;what_I_plot=(f+dv_dx-du_dy)*what_I_plot*1.e6 
+;what_I_plot=(dv_dx-du_dy)*1.e6
+what_I_plot=(dv_dx-du_dy)*1.e4 
+			;now vort. is in PVU !!
+			;which is 1e-6 K.kg-1.m2.s-1
+;w=where(abs(what_I_plot) gt 1.e10)
+;if (w(0) ne -1) then what_I_plot[w]=1.e38
+
+;overcontour = (dv_dx-du_dy)*1.e4
+
+
+;overcontour = sqrt((overvector_x + overvector_y)^2)
+;overvector_x=0
+;overvector_y=0
+minfield_init=0.
+maxfield_init=0.
+title='Vorticity (1e-4 s!U-1!N)'
+
+endif

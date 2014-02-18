@@ -1,0 +1,65 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ntime    = 7  ;; le vrai indice IDL 
+nlevel   = 2 
+filename = '/tmp15/aslmd/polar_61pts/wrfout_d01_2024-03-04_06:00:00_zabg'
+;filename = '/tmp15/aslmd/polar_61pts/wrfout_d01_2024-03-02_06:00:00_zabg'
+save_ps  = 'mesoscale_polar_winds_friction'
+;coord2d  = 'true' 
+field1   = 'USTM'  ;; omettre trace vitesse horizontale
+	;field1  = 'HGT'  ;; shaded
+	;field2  = 'XLAT' ;; contour 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+format        = '(F5.2)'
+colors        =  32
+pal           =  22 ;33 ;39 ;6 ;11 ;0 ;11 ;6 ;0 ;6 ;39 ;19 
+title_user    = ''
+title_axis    = ['grid points','grid points']
+title_user      = 'Friction velocity 50m ABG (m s!U-1!N) + Horizontal wind vectors'
+	;title_user      = 'Topography (m) + Horizontal wind vectors 50m ABG'
+subtitle_user   = 'LMD Mars Mesoscale / UTC = 01:00pm / Ls = 61.5!Uo!N / dx = 25km / single domain'
+poscb=0.85
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; FILL LIMITS				       ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+minfield_init= +00.1      
+maxfield_init= +00.6 
+	;format        = '(I0)'   
+	;minfield_init= -6500.
+	;maxfield_init= -1500.
+	;pal = 19
+missing_value=1.e30
+lim_max = maxfield_init & w=where((what_I_plot ge lim_max) and (what_I_plot le 1e9)) & if (w[0] ne -1) then what_I_plot[w]=lim_max 
+lim_min = minfield_init & w=where(what_I_plot le lim_min) & if (w[0] ne -1) then what_I_plot[w]=lim_min 
+;lim_blank = 0.2 & w=where(abs(what_I_plot) le lim_blank) & if (w[0] ne -1) then what_I_plot[w]=missing_value 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; WINDS				       ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+windex=12.  	;; default: 20.
+stride=2.       ;; default: 5.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; CONTOUR				       ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;overcontour=overcontour-mean(overcontour)      
+overcontour=overcontour/1000.
+lev=-10. + 0.2*findgen(100) 
+lev=-10. + 0.5*findgen(50) 
+;lev=-10. + 0.1*findgen(200)
+;lev=0
+	overcontour=-overcontour
+	lev=0.2*findgen(200)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; AXIS				       ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;isotropic='false'       ;; default: true
+;intervalx=0.5            
+;intervaly=0.5            
+intervalx=5.
+intervaly=5.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; MAP LIMITS 				       ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;windowx=[-51.0,-41.0]        
+;windowy=[78.0,88.0]
+windowx=[5.,55.]
+windowy=[5.,55.]
